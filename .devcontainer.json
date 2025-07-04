@@ -1,0 +1,12 @@
+{
+  "image": "debian:bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/rust:1": {},
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "postCreateCommand": {
+    "wasm-pack": "cargo install wasm-pack",
+    "angular": "npm install -g @angular/cli",
+    "firefox": "apt-get update && apt-get -y install firefox-esr"
+  }
+}
