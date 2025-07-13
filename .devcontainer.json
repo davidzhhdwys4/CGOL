@@ -8,5 +8,6 @@
     "wasm-pack": "cargo install wasm-pack",
     "angular": "npm install -g @angular/cli",
     "firefox": "apt-get update && apt-get -y install firefox-esr"
-  }
+  },
+  "runArgs": ["--network=host"]
 }
