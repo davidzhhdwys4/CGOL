@@ -1,0 +1,6 @@
+<p>universe-view works!</p>
+<mat-grid-list cols="10" rowHeight="1:1" gutterSize="0px">
+  @for (cell of cells; track cell) {
+    <mat-grid-tile [style.backgroundColor]="cell ? 'white' : 'black'"/>
+  }
+</mat-grid-list>
