@@ -25,10 +25,30 @@ export class UniverseView implements OnInit, AfterViewInit {
   }
 
   async ngAfterViewInit() {
-    if (this.universe) {
+    if (this.universe && this.canvas) {
       this.drawGrid();
       this.drawCells();
+      this.canvas.nativeElement.addEventListener('click', this.handleCanvasClick.bind(this));
     }
+  }
+  
+  private handleCanvasClick(event: MouseEvent) {
+    if (!this.canvas || !this.universe) return;
+    const rect = this.canvas.nativeElement.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const col = Math.floor(x / (this.cellSize + 1));
+    const row = Math.floor(y / (this.cellSize + 1));
+    if (col < 0 || col >= this.width || row < 0 || row >= this.height) return;
+
+    // Toggle cell state
+    const cellsPtr = this.universe.get_cells_ptr();
+    const cells = new Uint8Array(memory.buffer, cellsPtr, this.width * this.height);
+    const idx = row * this.width + col;
+    cells[idx] = cells[idx] === Cell.Dead ? Cell.Alive : Cell.Dead;
+
+    this.drawGrid();
+    this.drawCells();
   }
 
   protected play() {
