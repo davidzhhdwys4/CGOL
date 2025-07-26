@@ -4,7 +4,7 @@
     {
       "label": "build cgol-rust (wasm-pack)",
       "type": "shell",
-      "command": "wasm-pack build --target web --out-dir pkg",
+      "command": "wasm-pack build --target bundler --out-dir pkg",
       "options": {
         "cwd": "${workspaceFolder}/cgol-rust"
       },

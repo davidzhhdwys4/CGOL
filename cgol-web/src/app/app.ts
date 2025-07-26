@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import init, { greet } from '../../../cgol-rust/pkg'
+import init, { greet, Universe } from '../../../cgol-rust/pkg'
 import { UniverseView } from './universe-view/universe-view';
 
 @Component({
@@ -10,8 +10,8 @@ import { UniverseView } from './universe-view/universe-view';
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-  ngOnInit(): void {
-    init();
+  async ngOnInit() {
+    //await init();
   }
 
   protected title = 'cgol-web';
