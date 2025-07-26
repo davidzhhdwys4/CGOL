@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import init, { greet, Universe } from '../../../cgol-rust/pkg'
 import { UniverseView } from './universe-view/universe-view';
 
 @Component({
@@ -9,14 +8,6 @@ import { UniverseView } from './universe-view/universe-view';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit {
-  async ngOnInit() {
-    //await init();
-  }
-
+export class App {
   protected title = 'cgol-web';
-
-  onGreetClick() {
-    greet();
-  }
 }

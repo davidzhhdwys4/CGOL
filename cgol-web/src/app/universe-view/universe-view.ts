@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { memory } from '../../../../cgol-rust/pkg/cgol_bg.wasm';
-import init, { Cell, Universe } from '../../../../cgol-rust/pkg';
+import { Cell, Universe } from '../../../../cgol-rust/pkg';
 
 @Component({
   selector: 'app-universe-view',
@@ -14,16 +14,14 @@ export class UniverseView implements OnInit, AfterViewInit {
   protected readonly width: number = 50;
   protected readonly cellSize: number = 10;
 
-  @ViewChild('universecanvas') canvas: ElementRef | undefined;
+  @ViewChild('universecanvas') private canvas: ElementRef | undefined;
   private universe: Universe | undefined;
   private animationFrameId: number | null = null;
-  public isPlaying: boolean = false;
+  private isPlaying: boolean = false;
 
   async ngOnInit() {
-    //await init();
     this.universe = Universe.new(this.width, this.height);
     this.universe.set_cells_alive(new Uint32Array([1, 2, 3, 4, 4, 4, 4, 5]), new Uint32Array([1, 2, 3, 4, 5, 6, 7, 8]));
-    //this.drawGrid();
   }
 
   async ngAfterViewInit() {
@@ -88,7 +86,6 @@ export class UniverseView implements OnInit, AfterViewInit {
 
     const cellsPtr = this.universe.get_cells_ptr();
     const cells = new Uint8Array(memory.buffer, cellsPtr, this.width * this.height);
-    //let asdf = 1;
 
     ctx.beginPath();
 
