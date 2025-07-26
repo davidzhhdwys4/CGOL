@@ -1,18 +1,16 @@
 import { Component, ElementRef, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { memory } from '../../../../cgol-rust/pkg/cgol_bg.wasm';
 import { Cell, Universe } from '../../../../cgol-rust/pkg';
 
 @Component({
   selector: 'app-universe-view',
-  imports: [MatGridListModule],
   templateUrl: './universe-view.html',
   styleUrl: './universe-view.css'
 })
 export class UniverseView implements OnInit, AfterViewInit {
   protected readonly height: number = 50;
   protected readonly width: number = 50;
-  protected readonly cellSize: number = 10;
+  protected readonly cellSize: number = 15;
 
   @ViewChild('universecanvas') private canvas: ElementRef | undefined;
   private universe: Universe | undefined;
@@ -21,18 +19,16 @@ export class UniverseView implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     this.universe = Universe.new(this.width, this.height);
-    this.universe.set_cells_alive(new Uint32Array([1, 2, 3, 4, 4, 4, 4, 5]), new Uint32Array([1, 2, 3, 4, 5, 6, 7, 8]));
   }
 
   async ngAfterViewInit() {
     if (this.universe && this.canvas) {
       this.drawGrid();
       this.drawCells();
-      this.canvas.nativeElement.addEventListener('click', this.handleCanvasClick.bind(this));
     }
   }
   
-  private handleCanvasClick(event: MouseEvent) {
+  protected handleCanvasClick(event: MouseEvent) {
     if (!this.canvas || !this.universe) return;
     const rect = this.canvas.nativeElement.getBoundingClientRect();
     const x = event.clientX - rect.left;
