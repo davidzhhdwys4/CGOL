@@ -10,17 +10,19 @@ import init, { Cell, Universe } from '../../../../cgol-rust/pkg';
   styleUrl: './universe-view.css'
 })
 export class UniverseView implements OnInit, AfterViewInit {
-  protected readonly height: number = 10;
-  protected readonly width: number = 10;
+  protected readonly height: number = 50;
+  protected readonly width: number = 50;
   protected readonly cellSize: number = 10;
 
   @ViewChild('universecanvas') canvas: ElementRef | undefined;
   private universe: Universe | undefined;
+  private animationFrameId: number | null = null;
+  public isPlaying: boolean = false;
 
   async ngOnInit() {
     //await init();
     this.universe = Universe.new(this.width, this.height);
-
+    this.universe.set_cells_alive(new Uint32Array([1, 2, 3, 4, 4, 4, 4, 5]), new Uint32Array([1, 2, 3, 4, 5, 6, 7, 8]));
     //this.drawGrid();
   }
 
@@ -28,18 +30,32 @@ export class UniverseView implements OnInit, AfterViewInit {
     if (this.universe) {
       this.drawGrid();
       this.drawCells();
-      requestAnimationFrame(() => this.renderLoop());
+    }
+  }
+
+  protected play() {
+    if (!this.isPlaying) {
+      this.isPlaying = true;
+      this.renderLoop();
+    }
+  }
+
+  protected pause() {
+    this.isPlaying = false;
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
     }
   }
 
   private renderLoop() {
-    if (!this.universe || !this.canvas) return;
+    if (!this.universe || !this.canvas || !this.isPlaying) return;
 
     this.universe.tick();
     this.drawGrid();
     this.drawCells();
 
-    requestAnimationFrame(() => this.renderLoop());
+    this.animationFrameId = requestAnimationFrame(() => this.renderLoop());
   }
 
   private drawGrid() {
