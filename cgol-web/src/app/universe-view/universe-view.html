@@ -1,5 +1,6 @@
 <button (click)="play()">Play</button>
 <button (click)="pause()">Pause</button>
+<button (click)="save()">Save</button>
 <div>
   <canvas (click)="handleCanvasClick($event)" [height]="height * (cellSize + 1) + 1" [width]="width * (cellSize + 1) + 1" #universecanvas></canvas>
 </div>

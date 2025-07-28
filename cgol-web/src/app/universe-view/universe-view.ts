@@ -62,6 +62,38 @@ export class UniverseView implements OnInit, AfterViewInit {
     }
   }
 
+  protected save() {
+    if (!this.universe) return;
+
+    const cellsPtr = this.universe.get_cells_ptr();
+    const cells = new Uint8ClampedArray(memory.buffer, cellsPtr, this.width * this.height);
+    
+    const img = new ImageData(this.width, this.height);
+    for (let i = 0; i < cells.length; i++) {
+      const value = cells[i] === Cell.Alive ? 255 : 0;
+      img.data[i * 4] = value;     // Red
+      img.data[i * 4 + 1] = value; // Green
+      img.data[i * 4 + 2] = value; // Blue
+      img.data[i * 4 + 3] = 255;   // Alpha
+    }
+
+    const tmpCanvas = new OffscreenCanvas(this.width, this.height);
+    const ctx = tmpCanvas.getContext('2d');
+    if (ctx) {
+      ctx.putImageData(img, 0, 0);
+      tmpCanvas.convertToBlob().then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'universe.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    }
+  }
+
   private renderLoop() {
     if (!this.universe || !this.canvas || !this.isPlaying) return;
 
