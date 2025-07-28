@@ -6,18 +6,9 @@
 mod utils;
 
 use std::cmp;
+use std::io::Cursor;
+use image::{GenericImageView, ImageReader};
 use wasm_bindgen::prelude::*;
-
-#[wasm_bindgen]
-extern "C" {
-  fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-/// test
-pub fn greet() {
-  alert("Hello, asdfasdfasdf!");
-}
 
 /// Defines the state of a cell in the universe
 #[wasm_bindgen]
@@ -55,6 +46,31 @@ impl Universe {
       height: height,
       cells: vec![Cell::Dead; (width * height) as usize]
     }
+  }
+
+  /// Creates a new instance of [Universe] from an image
+  /// 
+  /// Arguments:
+  /// * `image_data`: the image data to create the universe from
+  pub fn from_image(image_data: &[u8]) -> Universe {
+    let img = ImageReader::new(Cursor::new(image_data))
+      .with_guessed_format()
+      .unwrap()
+      .decode()
+      .unwrap();
+
+    let mut universe = Universe::new(img.width(), img.height());
+
+    for (row, col, pixel) in img.pixels() {
+      let index = universe.rowcol_to_ind(row as u32, col as u32);
+      if pixel[0] > 128 || pixel[1] > 128 || pixel[2] > 128 {
+        universe.cells[index] = Cell::Alive;
+      } else {
+        universe.cells[index] = Cell::Dead;
+      }
+    }
+
+    universe
   }
 
   /// Sets specified cells to be [Cell::Alive] in the universe

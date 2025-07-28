@@ -94,6 +94,24 @@ export class UniverseView implements OnInit, AfterViewInit {
     }
   }
 
+  protected async handleFileInput(event: Event) {
+    if (!this.universe) return;
+
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+
+    const data = await file.arrayBuffer();
+    if (!data) return;
+
+    this.universe = Universe.from_image(new Uint8Array(data));
+    this.drawGrid();
+    this.drawCells();
+
+    input.value = '';
+  }
+
   private renderLoop() {
     if (!this.universe || !this.canvas || !this.isPlaying) return;
 
