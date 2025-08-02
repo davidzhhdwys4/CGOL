@@ -1,11 +1,16 @@
 import { Component, ElementRef, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { memory } from '../../../../cgol-rust/pkg/cgol_bg.wasm';
 import { Cell, Universe } from '../../../../cgol-rust/pkg';
 
 @Component({
   selector: 'app-universe-view',
   templateUrl: './universe-view.html',
-  styleUrl: './universe-view.css'
+  styleUrl: './universe-view.css',
+  imports: [MatInputModule, MatButtonToggleModule, MatIconModule, MatButtonModule],
 })
 export class UniverseView implements OnInit, AfterViewInit {
   protected readonly height: number = 50;
