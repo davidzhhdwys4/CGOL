@@ -21,6 +21,9 @@ export class UniverseView implements OnInit, AfterViewInit {
   private universe: Universe | undefined;
   private animationFrameId: number | null = null;
   private isPlaying: boolean = false;
+  private liveColor: string = 'black';
+  private deadColor: string = 'white';
+  private gridColor: string = 'black';
 
   async ngOnInit() {
     this.universe = Universe.new(this.width, this.height);
@@ -28,6 +31,10 @@ export class UniverseView implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     if (this.universe && this.canvas) {
+      this.liveColor = window.getComputedStyle(this.canvas.nativeElement).color || 'black';
+      this.deadColor = window.getComputedStyle(this.canvas.nativeElement).backgroundColor || 'white';
+      this.gridColor = window.getComputedStyle(this.canvas.nativeElement).borderColor || 'black';
+
       this.drawGrid();
       this.drawCells();
     }
@@ -48,7 +55,6 @@ export class UniverseView implements OnInit, AfterViewInit {
     const idx = row * this.width + col;
     cells[idx] = cells[idx] === Cell.Dead ? Cell.Alive : Cell.Dead;
 
-    this.drawGrid();
     this.drawCells();
   }
 
@@ -111,7 +117,6 @@ export class UniverseView implements OnInit, AfterViewInit {
     if (!data) return;
 
     this.universe = Universe.from_image(new Uint8Array(data));
-    this.drawGrid();
     this.drawCells();
 
     input.value = '';
@@ -121,7 +126,6 @@ export class UniverseView implements OnInit, AfterViewInit {
     if (!this.universe || !this.canvas || !this.isPlaying) return;
 
     this.universe.tick();
-    this.drawGrid();
     this.drawCells();
 
     this.animationFrameId = requestAnimationFrame(() => this.renderLoop());
@@ -134,7 +138,7 @@ export class UniverseView implements OnInit, AfterViewInit {
     if (!ctx) return;
 
     ctx.beginPath();
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = this.gridColor;;
 
     for (let i = 0; i <= this.width; i++) {
       ctx.moveTo(i * (this.cellSize + 1) + 1, 0);
@@ -163,7 +167,14 @@ export class UniverseView implements OnInit, AfterViewInit {
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.width; col++) {
         const idx = row * this.width + col;
-        ctx.fillStyle = cells[idx] === Cell.Dead ? 'white' : 'black';
+        ctx.fillStyle = cells[idx] === Cell.Dead ? this.deadColor : this.liveColor;
+
+        ctx.clearRect(
+          col * (this.cellSize + 1) + 1,
+          row * (this.cellSize + 1) + 1,
+          this.cellSize,
+          this.cellSize
+        );
 
         ctx.fillRect(
           col * (this.cellSize + 1) + 1,
