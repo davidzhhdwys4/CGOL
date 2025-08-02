@@ -1,0 +1,20 @@
+<div class="game-container">
+ @for (asdf of [].constructor(5); track asdf) {
+  <mat-card class="game-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Shiba Inu</mat-card-title>
+    </mat-card-header>
+    <img mat-card-image src="https://material.angular.dev/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+    <mat-card-actions>
+      <button matButton>
+        <mat-icon>play_circle_fill</mat-icon>
+        PLAY
+      </button>
+      <button matButton>
+        <mat-icon>delete</mat-icon>
+        DELETE
+      </button>
+    </mat-card-actions>
+  </mat-card>
+}
+</div>

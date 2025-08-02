@@ -1,0 +1,17 @@
+.game-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.game-card {
+  margin: 8px;
+  max-width: 400px;
+}
+
+/*
+fix problem with button icons getting cut off
+https://github.com/google/material-design-icons/issues/679#issuecomment-1948304969
+*/
+.mat-icon {
+  transform: rotate(0.03deg);
+}
