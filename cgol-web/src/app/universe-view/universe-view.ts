@@ -1,10 +1,12 @@
-import { Component, ElementRef, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, AfterViewInit, ViewChild, inject } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { AppDB } from '../db/app-db';
 import { memory } from '../../../../cgol-rust/pkg/cgol_bg.wasm';
 import { Cell, Universe } from '../../../../cgol-rust/pkg';
+
 
 @Component({
   selector: 'app-universe-view',
@@ -16,6 +18,8 @@ export class UniverseView implements OnInit, AfterViewInit {
   protected readonly height: number = 50;
   protected readonly width: number = 50;
   protected readonly cellSize: number = 15;
+
+  private readonly dbContext = inject(AppDB);
 
   @ViewChild('universecanvas') private canvas: ElementRef | undefined;
   private universe: Universe | undefined;
@@ -73,7 +77,7 @@ export class UniverseView implements OnInit, AfterViewInit {
     }
   }
 
-  protected save() {
+  protected async save(): Promise<void> {
     if (!this.universe) return;
 
     const cellsPtr = this.universe.get_cells_ptr();
@@ -92,16 +96,23 @@ export class UniverseView implements OnInit, AfterViewInit {
     const ctx = tmpCanvas.getContext('2d');
     if (ctx) {
       ctx.putImageData(img, 0, 0);
-      tmpCanvas.convertToBlob().then(blob => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'universe.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
+
+      const blob = await tmpCanvas.convertToBlob();
+      const buffer = await blob.arrayBuffer();
+
+      this.dbContext.games.add({
+          name: 'Untitled',
+          data: new Uint8Array(buffer)
+        });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'universe.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
   }
 
