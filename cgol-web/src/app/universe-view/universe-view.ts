@@ -100,19 +100,19 @@ export class UniverseView implements OnInit, AfterViewInit {
       const blob = await tmpCanvas.convertToBlob();
       const buffer = await blob.arrayBuffer();
 
-      this.dbContext.games.add({
+      await this.dbContext.games.add({
           name: 'Untitled',
           data: new Uint8Array(buffer)
         });
 
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'universe.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // const url = URL.createObjectURL(blob);
+      // const a = document.createElement('a');
+      // a.href = url;
+      // a.download = 'universe.png';
+      // document.body.appendChild(a);
+      // a.click();
+      // document.body.removeChild(a);
+      // URL.revokeObjectURL(url);
     }
   }
 

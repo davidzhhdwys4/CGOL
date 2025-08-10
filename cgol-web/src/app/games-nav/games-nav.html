@@ -1,10 +1,10 @@
 <div class="game-container">
- @for (asdf of [].constructor(5); track asdf) {
+ @for (game of games(); track game.id) {
   <mat-card class="game-card" appearance="outlined">
     <mat-card-header>
-      <mat-card-title>Shiba Inu</mat-card-title>
+      <mat-card-title>{{ game.name }}</mat-card-title>
     </mat-card-header>
-    <img mat-card-image src="https://material.angular.dev/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+    <img mat-card-image class="game-image" [src]="getImageUrl(game)" alt="Game image">
     <mat-card-actions>
       <button matButton>
         <mat-icon>play_circle_fill</mat-icon>

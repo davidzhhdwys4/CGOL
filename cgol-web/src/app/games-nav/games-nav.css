@@ -5,7 +5,13 @@
 
 .game-card {
   margin: 8px;
-  max-width: 400px;
+  width: 400px;
+}
+
+.game-image {
+  image-rendering: pixelated;
+  width: 100%;
+  height: auto;
 }
 
 /*
