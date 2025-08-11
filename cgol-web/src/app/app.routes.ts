@@ -5,7 +5,7 @@ import { UniverseView } from './universe-view/universe-view';
 
 export const routes: Routes = [
   {
-    path: 'new',
+    path: 'new/:gameId',
     title: 'New Game',
     component: UniverseView
   },

@@ -7,7 +7,7 @@ import { GameModel } from './game-model';
 })
 export class AppDB extends Dexie {
 
-  games!: EntityTable<GameModel>;
+  games!: EntityTable<GameModel, 'id'>;
 
   constructor() {
     super('CgolDB');

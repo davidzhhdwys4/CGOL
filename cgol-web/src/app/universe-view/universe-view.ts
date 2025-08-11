@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, AfterViewInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, AfterViewInit, ViewChild, inject } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,6 +6,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AppDB } from '../db/app-db';
 import { memory } from '../../../../cgol-rust/pkg/cgol_bg.wasm';
 import { Cell, Universe } from '../../../../cgol-rust/pkg';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -14,12 +15,13 @@ import { Cell, Universe } from '../../../../cgol-rust/pkg';
   styleUrl: './universe-view.css',
   imports: [MatInputModule, MatButtonToggleModule, MatIconModule, MatButtonModule],
 })
-export class UniverseView implements OnInit, AfterViewInit {
+export class UniverseView implements AfterViewInit {
   protected readonly height: number = 50;
   protected readonly width: number = 50;
   protected readonly cellSize: number = 15;
 
   private readonly dbContext = inject(AppDB);
+  private readonly route = inject(ActivatedRoute);
 
   @ViewChild('universecanvas') private canvas: ElementRef | undefined;
   private universe: Universe | undefined;
@@ -29,11 +31,23 @@ export class UniverseView implements OnInit, AfterViewInit {
   private deadColor: string = 'white';
   private gridColor: string = 'black';
 
-  async ngOnInit() {
-    this.universe = Universe.new(this.width, this.height);
-  }
-
   async ngAfterViewInit() {
+    const gameId = parseInt(this.route.snapshot.params['gameId']);
+
+    if (gameId == 0) {
+      // Create a new game
+      this.universe = Universe.new(this.width, this.height);
+    } else {
+      const game = await this.dbContext.games.get(gameId);
+      if (game) {
+        // Load an existing game
+        this.universe = Universe.from_image(game.data);
+      } else {
+        // specified game does not exist, create a new universe
+        this.universe = Universe.new(this.width, this.height);
+      }
+    }
+
     if (this.universe && this.canvas) {
       this.liveColor = window.getComputedStyle(this.canvas.nativeElement).color || 'black';
       this.deadColor = window.getComputedStyle(this.canvas.nativeElement).backgroundColor || 'white';

@@ -4,6 +4,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import { AppDB } from '../db/app-db';
 import { GameModel } from '../db/game-model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-games-nav',
@@ -14,6 +15,7 @@ import { GameModel } from '../db/game-model';
 export class GamesNav {
 
   private readonly dbContext = inject(AppDB);
+  private readonly router = inject(Router);
   private readonly maxGamesPerPage = 10;
 
   private imgUrlMap = new Map<number, string>();
@@ -37,6 +39,11 @@ export class GamesNav {
     }
 
     return this.imgUrlMap.get(game.id)!;
+  }
+
+  protected playGame(game: GameModel): void {
+    if (!game.id) return;
+    this.router.navigate(['/new', game.id]);
   }
 
   private async loadGames(): Promise<void> {

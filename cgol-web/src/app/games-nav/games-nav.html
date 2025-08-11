@@ -6,7 +6,7 @@
     </mat-card-header>
     <img mat-card-image class="game-image" [src]="getImageUrl(game)" alt="Game image">
     <mat-card-actions>
-      <button matButton>
+      <button matButton (click)="playGame(game)">
         <mat-icon>play_circle_fill</mat-icon>
         PLAY
       </button>
