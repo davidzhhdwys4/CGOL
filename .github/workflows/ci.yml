@@ -69,7 +69,7 @@ jobs:
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./cgol-web/dist
+          path: ./cgol-web/dist/cgol-web/browser
 
   deploy-gh-pages:
     runs-on: ubuntu-latest
