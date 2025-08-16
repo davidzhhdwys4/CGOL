@@ -1,0 +1,56 @@
+name: ci
+
+on: push
+
+jobs:
+  build-cgol-rust:
+    runs-on: ubuntu-latest
+    container: rust:1-slim-trixie
+    defaults:
+      run:
+        working-directory: ./cgol-rust
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install wasm-pack
+        run: cargo install wasm-pack
+      - name: Build
+        run: wasm-pack build --target bundler --out-dir pkg
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cgol-rust-pkg
+          path: ./cgol-rust/pkg
+
+  test-cgol-rust:
+    runs-on: ubuntu-latest
+    container: rust:1-slim-trixie
+    defaults:
+      run:
+        working-directory: ./cgol-rust
+    steps:
+      - uses: actions/checkout@v5
+      - name: Run tests
+        run: cargo test
+
+  build-cgol-web:
+    runs-on: ubuntu-latest
+    container: node:22-alpine
+    needs: [build-cgol-rust]
+    defaults:
+      run:
+        working-directory: ./cgol-web
+    steps:
+      - uses: actions/checkout@v5
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: cgol-rust-pkg
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ./cgol-web/dist
