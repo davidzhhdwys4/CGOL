@@ -1,0 +1,86 @@
+name: ci
+
+on: push
+
+jobs:
+  build-cgol-rust:
+    runs-on: ubuntu-latest
+    container: rust:1-slim-trixie
+    defaults:
+      run:
+        working-directory: ./cgol-rust
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install wasm-pack
+        run: cargo install wasm-pack
+      - name: Build
+        run: wasm-pack build --target bundler --out-dir pkg
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cgol-rust-pkg
+          path: ./cgol-rust/pkg
+
+  test-cgol-rust:
+    runs-on: ubuntu-latest
+    container: rust:1-slim-trixie
+    defaults:
+      run:
+        working-directory: ./cgol-rust
+    steps:
+      - uses: actions/checkout@v5
+      - name: Run tests
+        run: cargo test
+
+  build-cgol-web:
+    runs-on: ubuntu-latest
+    container: node:22-alpine
+    needs: [build-cgol-rust]
+    defaults:
+      run:
+        working-directory: ./cgol-web
+    steps:
+      - uses: actions/checkout@v5
+      - name: Download artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: cgol-rust-pkg
+          path: ./cgol-rust/pkg
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build -- --base-href .
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ./cgol-web/dist
+
+  upload-gh-pages:
+    runs-on: ubuntu-latest
+    needs: [build-cgol-web]
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: dist
+          path: ./cgol-web/dist
+      - name: Upload for GitHub Pages
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./cgol-web/dist/cgol-web/browser
+
+  deploy-gh-pages:
+    runs-on: ubuntu-latest
+    needs: [upload-gh-pages]
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
