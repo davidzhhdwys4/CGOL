@@ -63,7 +63,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v5
         with:
-          name: cgol-rust-pkg
+          name: dist
           path: ./cgol-web/dist
       - name: Upload for GitHub Pages
         id: deployment
