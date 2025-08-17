@@ -1,5 +1,7 @@
 # About
 
+Deployed to https://davidzhhdwys4.github.io/CGOL/
+
 I'm interested in learning how web apps can fill the role traditionally reserved for desktop apps. Attributes of this role, in my opinion, are
 - High performance by running native code
 - Offline availability, no internet required
