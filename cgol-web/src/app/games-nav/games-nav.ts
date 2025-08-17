@@ -46,6 +46,13 @@ export class GamesNav {
     this.router.navigate(['/new', game.id]);
   }
 
+  protected deleteGame(game: GameModel): void {
+    if (!game.id) return;
+
+    this.dbContext.games.delete(game.id);
+    this.loadGames();
+  }
+
   private async loadGames(): Promise<void> {
     const tmp = await this.dbContext.games.limit(this.maxGamesPerPage).toArray();
     this.games.set(tmp);
