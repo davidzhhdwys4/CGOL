@@ -1,4 +1,4 @@
-<input matInput placeholder="Game Title">
+<input matInput placeholder="Game Title" [(ngModel)]="gameTitle" />
 
 <div>
   <canvas (click)="handleCanvasClick($event)" [height]="height * (cellSize + 1) + 1" [width]="width * (cellSize + 1) + 1" #universecanvas></canvas>

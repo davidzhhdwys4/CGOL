@@ -1,4 +1,6 @@
-import { Component, ElementRef, AfterViewInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, AfterViewInit, ViewChild, inject, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,14 +8,13 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AppDB } from '../db/app-db';
 import { memory } from '../../../../cgol-rust/pkg/cgol_bg.wasm';
 import { Cell, Universe } from '../../../../cgol-rust/pkg';
-import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
   selector: 'app-universe-view',
   templateUrl: './universe-view.html',
   styleUrl: './universe-view.css',
-  imports: [MatInputModule, MatButtonToggleModule, MatIconModule, MatButtonModule],
+  imports: [FormsModule, MatInputModule, MatButtonToggleModule, MatIconModule, MatButtonModule],
 })
 export class UniverseView implements AfterViewInit {
   protected readonly height: number = 50;
@@ -22,6 +23,9 @@ export class UniverseView implements AfterViewInit {
 
   private readonly dbContext = inject(AppDB);
   private readonly route = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  protected gameTitle: string = '';
 
   @ViewChild('universecanvas') private canvas: ElementRef | undefined;
   private universe: Universe | undefined;
@@ -42,6 +46,7 @@ export class UniverseView implements AfterViewInit {
       if (game) {
         // Load an existing game
         this.universe = Universe.from_image(game.data);
+        this.gameTitle = game.name;
       } else {
         // specified game does not exist, create a new universe
         this.universe = Universe.new(this.width, this.height);
@@ -56,6 +61,8 @@ export class UniverseView implements AfterViewInit {
       this.drawGrid();
       this.drawCells();
     }
+
+    this.cdr.detectChanges();
   }
   
   protected handleCanvasClick(event: MouseEvent) {
@@ -115,7 +122,7 @@ export class UniverseView implements AfterViewInit {
       const buffer = await blob.arrayBuffer();
 
       await this.dbContext.games.add({
-          name: 'Untitled',
+          name: this.gameTitle || 'Untitled',
           data: new Uint8Array(buffer)
         });
 
