@@ -5,17 +5,17 @@
 <mat-drawer-container autosize >
   <mat-drawer #drawer mode="side" opened>
     <mat-nav-list>
-      <a mat-list-item [routerLink]="['/about']">
-        <mat-icon matListItemIcon>info</mat-icon>
-        <h3>About</h3>
-      </a>
       <a mat-list-item [routerLink]="['/new/0']">
         <mat-icon matListItemIcon>apps</mat-icon>
-        <h3>New Game</h3>
+        <span>New Game</span>
       </a>
       <a mat-list-item [routerLink]="['/saved']">
         <mat-icon matListItemIcon>apps</mat-icon>
-        <h3>Saved Games</h3>
+        <span>Saved Games</span>
+      </a>
+      <a mat-list-item [routerLink]="['/about']">
+        <mat-icon matListItemIcon>info</mat-icon>
+        <span>About</span>
       </a>
     </mat-nav-list>
   </mat-drawer>

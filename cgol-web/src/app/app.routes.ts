@@ -5,6 +5,11 @@ import { UniverseView } from './universe-view/universe-view';
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: '/new/0',
+    pathMatch: 'full'
+  },
+  {
     path: 'new/:gameId',
     title: 'New Game',
     component: UniverseView

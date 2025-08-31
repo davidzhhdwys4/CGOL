@@ -1,1 +1,21 @@
-<p>about works!</p>
+<h3>About the app</h3>
+<p>
+See <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Wikipedia article</a> for more information.
+This app is served from my <a href="https://github.com/davidzhhdwys4/CGOL">github repo</a>.
+</p>
+
+<h3>Why make this?</h3>
+This app is a combined tutorial of the following tools:
+<ul>
+  <li>Angular</li>
+  <li>Angular Material</li>
+  <li>Rust and WebAssembly</li>
+  <li>IndexedDB via Dexie.js</li>
+  <li>Github Actions</li>
+</ul>
+
+The app uses the angular framework and angular material components for the frontend.
+The backend logic of the game is implemented in Rust and compiled to WebAssembly, and the game states are saved in the browser's IndexedDB using Dexie.js.
+<br/><br/>
+There is an angular service worker that enables offline support. Try turning on airplane mode and refreshing the page - the app will still load!
+In Edge and Chrome, you can also install the app as a PWA (Progressive Web App) by clicking the install button in the address bar.
