@@ -1,20 +1,22 @@
-<input matInput placeholder="Game Title" [(ngModel)]="gameTitle" />
+<div class="container">
+  <input matInput placeholder="Game Title" [(ngModel)]="gameTitle" />
 
-<div>
-  <canvas (click)="handleCanvasClick($event)" [height]="height * (cellSize + 1) + 1" [width]="width * (cellSize + 1) + 1" #universecanvas></canvas>
+  <div>
+    <canvas (click)="handleCanvasClick($event)" [height]="height * (cellSize + 1) + 1" [width]="width * (cellSize + 1) + 1" #universecanvas></canvas>
+  </div>
+
+  <mat-button-toggle-group hideSingleSelectionIndicator="true">
+    <mat-button-toggle (click)="play()">
+      <mat-icon matListItemIcon>play_circle_outline</mat-icon>
+    </mat-button-toggle>
+    <mat-button-toggle (click)="pause()">
+      <mat-icon matListItemIcon>pause_circle_outline</mat-icon>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <button matButton (click)="save()">
+    <mat-icon matListItemIcon>save</mat-icon>
+    Save
+  </button>
+  <input type="file" accept="image/*" (input)="handleFileInput($event)">
 </div>
-
-<mat-button-toggle-group hideSingleSelectionIndicator="true">
-  <mat-button-toggle (click)="play()">
-    <mat-icon matListItemIcon>play_circle_outline</mat-icon>
-  </mat-button-toggle>
-  <mat-button-toggle (click)="pause()">
-    <mat-icon matListItemIcon>pause_circle_outline</mat-icon>
-  </mat-button-toggle>
-</mat-button-toggle-group>
-
-<button matButton (click)="save()">
-  <mat-icon matListItemIcon>save</mat-icon>
-  Save
-</button>
-<input type="file" accept="image/*" (input)="handleFileInput($event)">
